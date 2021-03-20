@@ -4,6 +4,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import javax.persistence.*;
+import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "messages")
@@ -22,7 +23,4 @@ public class Messages extends BaseEntity {
     private Long userId;
 
     private Long roomId;
-
-
-
 }
