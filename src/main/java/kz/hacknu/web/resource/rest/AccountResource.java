@@ -4,6 +4,7 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import javassist.NotFoundException;
 import kz.hacknu.web.domain.security.User;
+import kz.hacknu.web.dto.CreateUserDTO;
 import kz.hacknu.web.dto.NewUserDTO;
 import kz.hacknu.web.resource.vm.KeyAndPasswordVM;
 import kz.hacknu.web.service.UserService;
@@ -44,16 +45,15 @@ public class AccountResource {
     }
 
     @ApiOperation(value = "Request create account; access: ANY",
-            notes = "if registrated it will return")
-
+            notes = "if registrated it will return status (string)")
     @PostMapping(path ="/create")
-    public ResponseEntity<?> create(@RequestBody NewUserDTO newUserDTO) {
+    public ResponseEntity<?> create(@RequestBody CreateUserDTO createUserDTO) {
         try {
-            User user = userService.addUser(newUserDTO, new User());
+            User n_user = userService.addUser(createUserDTO);
         } catch (EmailAlreadyUsedException | UsernameAlreadyUsedException e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.UNAUTHORIZED);
         }
-        return new ResponseEntity<>("User created", HttpStatus.CREATED);
+        return new ResponseEntity<>("User created", HttpStatus.OK);
     }
 
     @ApiOperation(value = "Recovery password with giving key; access: ANY",

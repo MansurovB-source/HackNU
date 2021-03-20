@@ -27,4 +27,6 @@ public interface UserGroupRepository extends JpaRepository<UserGroup, String>,
 
     @Override
     Page<UserGroup> findAll(Predicate predicate, Pageable pageable);
+
+    UserGroup findUserGroupsByCode(String code);
 }
