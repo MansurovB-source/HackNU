@@ -94,6 +94,9 @@ public class User extends BaseEntity implements UserDetails {
     private Set<User> subUsers = new HashSet<>();
 
 
+    private Long activeRoomId;
+
+
     @Transient
     private Collection<? extends GrantedAuthority> sAuthorities = new HashSet<>();
 

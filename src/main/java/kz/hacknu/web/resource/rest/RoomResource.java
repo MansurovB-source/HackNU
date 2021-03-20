@@ -77,4 +77,14 @@ public class RoomResource {
     ) {
         return new RoomDTO(roomService.setActiveToFalse(roomId));
     }
+
+    @ApiOperation(value = "Joining to room")
+    @GetMapping("/join")
+    public RoomDTO joinToRoom(
+            @ApiIgnore
+            @GetUser User user,
+            @RequestParam Long roomId
+    ){
+        return new RoomDTO(roomService.join(roomId, user));
+    }
 }
