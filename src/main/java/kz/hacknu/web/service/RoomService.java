@@ -24,12 +24,13 @@ public class RoomService {
         this.roomRepository = roomRepository;
     }
 
-    public Room create(RoomNewDTO newRoom)
+    public Room create(RoomNewDTO newRoom, User user)
     {
         Room room = new Room();
         room.setNameRoom(newRoom.getNameRoom());
         room.setDescription(newRoom.getDescription());
         room.setCounter(1);
+        room.setCreatedBy(user.getId());
         room.setType(newRoom.getType());
         room.setActive(true);
         return roomRepository.save(room);
@@ -48,7 +49,7 @@ public class RoomService {
         return roomRepository.findAll(predicate, pageable);
     }
 
-    public Set<User> listUserSit(Long roomId, Pageable pageable)
+    public Set<User> listUserSit(Long roomId)
     {
         Room room = roomRepository.findById(roomId).orElseThrow();
         return room.getSitUsers();
@@ -67,9 +68,6 @@ public class RoomService {
         room.setActive(false);
         return roomRepository.save(room);
     }
-
-
-
 
 
 }
