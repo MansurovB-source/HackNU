@@ -12,6 +12,8 @@ import kz.hacknu.web.service.exception.UsernameAlreadyUsedException;
 import kz.hacknu.web.service.impl.MailService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
@@ -45,12 +47,13 @@ public class AccountResource {
             notes = "if registrated it will return")
 
     @PostMapping(path ="/create")
-    public void create(@RequestBody NewUserDTO newUserDTO) {
+    public ResponseEntity<?> create(@RequestBody NewUserDTO newUserDTO) {
         try {
             User user = userService.addUser(newUserDTO, new User());
         } catch (EmailAlreadyUsedException | UsernameAlreadyUsedException e) {
-            e.getMessage();
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.UNAUTHORIZED);
         }
+        return new ResponseEntity<>("User created", HttpStatus.CREATED);
     }
 
     @ApiOperation(value = "Recovery password with giving key; access: ANY",
