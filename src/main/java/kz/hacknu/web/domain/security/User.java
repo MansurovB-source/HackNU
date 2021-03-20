@@ -85,6 +85,16 @@ public class User extends BaseEntity implements UserDetails {
     private Set<UserGroup> userGroups = new HashSet<>();
 
 
+    @JsonIgnore
+    @ManyToMany(fetch = FetchType.LAZY)
+    @JoinTable(
+            name = "m2m_subscribe",
+            joinColumns = {@JoinColumn(name = "user_id", referencedColumnName = "id")},
+            inverseJoinColumns = {@JoinColumn(name = "user_subs_id", referencedColumnName = "id")})
+    @BatchSize(size = 20)
+    private Set<User> subUsers = new HashSet<>();
+
+
     @Transient
     private Collection<? extends GrantedAuthority> sAuthorities = new HashSet<>();
 
