@@ -5,6 +5,7 @@ import com.querydsl.core.types.Predicate;
 import kz.hacknu.web.domain.security.QUser;
 import kz.hacknu.web.domain.security.User;
 import kz.hacknu.web.domain.security.UserGroup;
+import kz.hacknu.web.dto.CreateUserDTO;
 import kz.hacknu.web.dto.NewUserDTO;
 import kz.hacknu.web.dto.UserDTO;
 import kz.hacknu.web.repository.UserGroupRepository;
@@ -27,9 +28,7 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.validation.constraints.NotNull;
 import java.time.Instant;
 import java.time.LocalDateTime;
-import java.util.Objects;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -51,6 +50,8 @@ public class UserService {
     public static String ROLE_ADMIN = "ROLE_ADMIN";
 
     public static String ROLE_OWNER = "ROLE_OWNER";
+
+    public static String ROLE_USER = "ROLE_USER";
 
 
     public UserService(UserRepository userRepository, UserGroupRepository userGroupRepository, UserServiceImpl userServiceImpl, PasswordEncoder passwordEncoder, CacheManager cacheManager) {
@@ -82,6 +83,35 @@ public class UserService {
     }
 
 
+    public User addUser(CreateUserDTO createUserDTO) throws EmailAlreadyUsedException, UsernameAlreadyUsedException {
+        if(findOneByLogin(createUserDTO.getLogin().toLowerCase()).isPresent()) {
+            throw new UsernameAlreadyUsedException();
+        } else if(findOneByEmailIgnoreCase(createUserDTO.getEmail()).isPresent()) {
+            throw new EmailAlreadyUsedException();
+        } else {
+            User user = new User();
+            user.setLogin(createUserDTO.getLogin().toLowerCase());
+            user.setFirstName(createUserDTO.getFirstName());
+            user.setLastName(createUserDTO.getLastName());
+            if(createUserDTO.getEmail() != null) {
+                user.setEmail(createUserDTO.getEmail().toLowerCase());
+            }
+
+            user.setPassword(passwordEncoder.encode(createUserDTO.getPassword()));
+            user.setResetKey(RandomUtil.generateRandomAlphaNum());
+            user.setResetDate(Instant.now());
+            user.setCreatedAt(LocalDateTime.now());
+            user.setActivated(true);
+            Set<UserGroup> userGroups = new HashSet<>();
+            userGroups.add(userGroupRepository.findUserGroupsByCode(ROLE_USER));
+            user.setUserGroups(userGroups);
+            user = userRepository.save(user);
+            this.clearUserCaches(user);
+            log.debug("Created Information for User: {}", user);
+            return user;
+        }
+
+    }
     public User addUser(NewUserDTO userDTO, User current) throws EmailAlreadyUsedException, UsernameAlreadyUsedException {
         if (findOneByLogin(userDTO.getLogin().toLowerCase()).isPresent()) {
             throw new UsernameAlreadyUsedException();
