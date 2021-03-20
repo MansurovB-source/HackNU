@@ -4,8 +4,11 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import javassist.NotFoundException;
 import kz.hacknu.web.domain.security.User;
+import kz.hacknu.web.dto.NewUserDTO;
 import kz.hacknu.web.resource.vm.KeyAndPasswordVM;
 import kz.hacknu.web.service.UserService;
+import kz.hacknu.web.service.exception.EmailAlreadyUsedException;
+import kz.hacknu.web.service.exception.UsernameAlreadyUsedException;
 import kz.hacknu.web.service.impl.MailService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -38,6 +41,17 @@ public class AccountResource {
         return request.getRemoteUser();
     }
 
+    @ApiOperation(value = "Request create account; access: ANY",
+            notes = "if registrated it will return")
+
+    @PostMapping(path ="/create")
+    public void create(@RequestBody NewUserDTO newUserDTO) {
+        try {
+            User user = userService.addUser(newUserDTO, new User());
+        } catch (EmailAlreadyUsedException | UsernameAlreadyUsedException e) {
+            e.getMessage();
+        }
+    }
 
     @ApiOperation(value = "Recovery password with giving key; access: ANY",
             notes = "You will get key after request password reset or in creating account.")
@@ -64,6 +78,5 @@ public class AccountResource {
             throw new NotFoundException("Email not found");
         }
     }
-
 
 }
