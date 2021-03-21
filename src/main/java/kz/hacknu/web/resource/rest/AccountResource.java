@@ -47,14 +47,14 @@ public class AccountResource {
     @ApiOperation(value = "Request create account; access: ANY",
             notes = "if registrated it will return status (string)")
     @PostMapping(path ="/create")
-    public ResponseEntity<?> create(@RequestBody CreateUserDTO createUserDTO) {
-        try {
-            User n_user = userService.addUser(createUserDTO);
-        } catch (EmailAlreadyUsedException | UsernameAlreadyUsedException e) {
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.UNAUTHORIZED);
+        public ResponseEntity<?> create(@RequestBody CreateUserDTO createUserDTO) {
+            try {
+                User n_user = userService.addUser(createUserDTO);
+            } catch (EmailAlreadyUsedException | UsernameAlreadyUsedException e) {
+                return new ResponseEntity<>(e.getMessage(), HttpStatus.UNAUTHORIZED);
+            }
+            return new ResponseEntity<>("User created", HttpStatus.OK);
         }
-        return new ResponseEntity<>("User created", HttpStatus.OK);
-    }
 
     @ApiOperation(value = "Recovery password with giving key; access: ANY",
             notes = "You will get key after request password reset or in creating account.")

@@ -5,8 +5,8 @@ socket.on('message2', function (data) {
  console.log(data);
 });
 
-socket.on(123, function (data) {
-    console.log(data);
+socket.on('10', function (data) {
+    console.log('123 ',data);
    });
 
 function connectUser () { // Called whenever a user signs in
@@ -15,7 +15,7 @@ function connectUser () { // Called whenever a user signs in
  socket.emit('userConnected', userId);
  console.log('connected')
 }
-function disconnectUser () { // Called whenever a user signs out
+function wm () { // Called whenever a user signs out
 
 
  socket.emit('event', {room: '1',
@@ -26,7 +26,7 @@ function disconnectUser () { // Called whenever a user signs out
 
 });
 }
-disconnectUser()
+wm()
 /*
 var q = 'events';
 
