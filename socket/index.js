@@ -28,11 +28,14 @@ io.on('connection', function(socket){
         return ch.assertQueue(w).then(function(ok) {
           return ch.consume(w, function(msg) {
             if (msg !== null) {
+                try{
                 ch.ack(msg);
                 const data = JSON.parse(msg.content);
               console.log(data);
               socket.emit(data.room, data)
-              
+                } catch(err) {
+                    console.log(err)
+                }
             }
           });
         });

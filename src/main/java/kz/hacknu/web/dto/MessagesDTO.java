@@ -1,21 +1,41 @@
 package kz.hacknu.web.dto;
 
+import lombok.Getter;
+import lombok.Setter;
+
+import java.io.Serializable;
+
 /**
  * Created by IntelliJ IDEA.
  *
  * @author Behruz Mansurov
  */
-public class MessagesDTO {
+@Getter
+@Setter
+public class MessagesDTO implements Serializable {
+
+    private static final long serialVersionUID = 1L;
 
     private String text;
 
-    private Long roomId;
+    private String name;
 
-    public String getText() {
-        return text;
+    private String room;
+
+    private String user_id;
+
+
+    public MessagesDTO(){
+
     }
 
-    public Long getRoomId() {
-        return roomId;
+    @Override
+    public String toString() {
+        return "{" +
+                "\"text\":\"" + text +
+                "\", \"name\":\"" + name +
+                "\", \"room\":\"" + room +
+                "\", \"user_id\":\"" + user_id +
+                "\"}";
     }
 }

@@ -14,8 +14,13 @@ function connectUser () { // Called whenever a user signs in
 function disconnectUser () { // Called whenever a user signs out
 
 
- socket.emit('event', {room: 'message2',
- message: 'messag'});
+ socket.emit('event', {room: '1',
+ text: 'messahljlkjg',
+ name: "uluk",
+ user_id: "1"
+
+
+});
 }
 disconnectUser()
 
@@ -29,7 +34,12 @@ open.then(function(conn) {
   }).then(function(ch) {
     return ch.assertQueue('sockets').then(function(ok) {
       return ch.sendToQueue('sockets', Buffer.from(JSON.stringify({room: 'message2',
-      message: 'messahljlkjg'})));
+      text: 'messahljlkjg',
+      name: "uluk",
+      user_id: "1"
+    
+    
+    })));
     });
   }).catch(console.warn);
 // Consumer
