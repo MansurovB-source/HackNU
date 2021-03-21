@@ -25,7 +25,13 @@ public class BotResource {
      public ResponseEntity<String> create(@RequestBody MessagesDTO messagesDTO) {
         System.out.println(messagesDTO.toString());
         rabbitTemplate.convertAndSend("sockets", messagesDTO.toString());
-        messagesService.create(messagesDTO);
+        try {
+            messagesService.create(messagesDTO);
+        } catch (Exception e)
+        {
+            e.printStackTrace();
+        }
+
         return ResponseEntity.ok("success");
     }
 

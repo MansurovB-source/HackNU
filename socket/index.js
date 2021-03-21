@@ -42,7 +42,7 @@ io.on('connection', function(socket){
       }).catch(console.warn);
 
   socket.on('disconnect', function(){
-      
+      console.log('disconnect')
   });
 });
 

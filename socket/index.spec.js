@@ -1,15 +1,19 @@
 const io = require("socket.io-client");
-
-var socket = io('http://localhost:3000'); // Server endpoint
+var socket = io('http://62.171.186.222:3000'); // Server endpoint
 socket.on('connect', connectUser);
 socket.on('message2', function (data) {
  console.log(data);
 });
 
+socket.on(123, function (data) {
+    console.log(data);
+   });
+
 function connectUser () { // Called whenever a user signs in
  var userId = 123
  if (!userId) return;
  socket.emit('userConnected', userId);
+ console.log('connected')
 }
 function disconnectUser () { // Called whenever a user signs out
 
@@ -23,7 +27,7 @@ function disconnectUser () { // Called whenever a user signs out
 });
 }
 disconnectUser()
-
+/*
 var q = 'events';
 
 var open = require('amqplib').connect('amqp://localhost');
@@ -54,4 +58,4 @@ open.then(function(conn) {
       }
     });
   });
-}).catch(console.warn);
+}).catch(console.warn);*/
