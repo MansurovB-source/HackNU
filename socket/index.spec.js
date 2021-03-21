@@ -18,3 +18,30 @@ function disconnectUser () { // Called whenever a user signs out
  message: 'messag'});
 }
 disconnectUser()
+
+var q = 'events';
+
+var open = require('amqplib').connect('amqp://localhost');
+
+// Publisher
+open.then(function(conn) {
+    return conn.createChannel();
+  }).then(function(ch) {
+    return ch.assertQueue('sockets').then(function(ok) {
+      return ch.sendToQueue('sockets', Buffer.from(JSON.stringify({room: 'message2',
+      message: 'messahljlkjg'})));
+    });
+  }).catch(console.warn);
+// Consumer
+open.then(function(conn) {
+  return conn.createChannel();
+}).then(function(ch) {
+  return ch.assertQueue(q).then(function(ok) {
+    return ch.consume(q, function(msg) {
+      if (msg !== null) {
+        console.log(JSON.parse(msg.content));
+        ch.ack(msg);
+      }
+    });
+  });
+}).catch(console.warn);
